@@ -1,5 +1,5 @@
 <div align="center">
-<img src="logo.png" alt="FUTURA Logo" width="1500"/>
+<img src="logo.png" alt="FUTURA Logo" width="2000"/>
 </div>
 
 # Graduation Cap Toss 🎓
