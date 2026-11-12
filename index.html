@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Congratulations, Gaveesha</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600&family=Cormorant+Garamond:ital,wght@0,400;1,400&family=JetBrains+Mono&display=swap" rel="stylesheet">
+<style>
+  :root { color-scheme: dark; --gold: #d4af37; --gold-light: #f6e27a; --bg: #07070a; }
+  html, body { height: 100%; margin: 0; background: var(--bg); overflow: hidden; }
+  #c { position: fixed; inset: 0; width: 100%; height: 100%; display: block; }
+  .overlay { position: fixed; inset: 0; display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center; pointer-events: none; padding: env(safe-area-inset-top, 0px) 20px env(safe-area-inset-bottom, 0px); box-sizing: border-box; }
+  .eyebrow { font-family: "Cinzel", Georgia, serif; letter-spacing: .5em; font-size: clamp(11px, 2.6vw, 16px); color: var(--gold); text-transform: uppercase; margin: 0 0 14px; opacity: 0; animation: rise 1.6s .3s forwards; }
+  h1 { font-family: "Cinzel", Georgia, serif; font-weight: 600; font-size: clamp(34px, 9vw, 92px); line-height: 1.05; margin: 0; background: linear-gradient(180deg, var(--gold-light), var(--gold) 55%, #9a7410); -webkit-background-clip: text; background-clip: text; color: transparent; filter: drop-shadow(0 0 18px rgba(212,175,55,.35)); opacity: 0; animation: rise 1.8s .8s forwards; }
+  .rule { width: min(280px, 60vw); height: 1px; margin: 22px auto 18px; background: linear-gradient(90deg, transparent, var(--gold), transparent); opacity: 0; animation: rise 1.6s 1.3s forwards; }
+  .sub { font-family: "Cormorant Garamond", Georgia, serif; font-style: italic; font-size: clamp(18px, 4vw, 28px); color: #e8dcae; margin: 0; opacity: 0; animation: rise 1.6s 1.6s forwards; }
+  .code { font-family: "JetBrains Mono", ui-monospace, monospace; font-size: clamp(12px, 3vw, 16px); color: var(--gold-light); margin-top: 24px; padding: 9px 16px; background: rgba(7,7,10,.72); border: 1px solid rgba(212,175,55,.55); border-radius: 10px; box-shadow: 0 0 22px rgba(212,175,55,.18); text-shadow: 0 0 10px rgba(212,175,55,.5); max-width: 92vw; box-sizing: border-box; opacity: 0; animation: rise 1.6s 2.1s forwards; }
+  .code .c { color: #8fbf7a; text-shadow: none; }
+  .hint { position: fixed; left: 0; right: 0; bottom: calc(env(safe-area-inset-bottom, 0px) + 18px); text-align: center; font-family: "Cormorant Garamond", Georgia, serif; font-size: 15px; letter-spacing: .12em; color: rgba(232,220,174,.55); pointer-events: none; }
+  @keyframes rise { from { opacity: 0; transform: translateY(14px); } to { opacity: 1; transform: none; } }
+</style>
+</head>
+<body>
+<canvas id="c"></canvas>
+<div class="overlay">
+  <p class="eyebrow">Congratulations</p>
+  <h1>Gaveesha<br>Welhena</h1>
+  <div class="rule"></div>
+  <p class="sub">Computer Science Graduate</p>
+  <div class="code">graduate.status = "completed"; <span class="c">// build successful</span></div>
+</div>
+<div class="hint">tap anywhere to toss more caps</div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+<script>
+(function () {
+  var canvas = document.getElementById("c");
+  var renderer = new THREE.WebGLRenderer({ canvas: canvas, antialias: true, alpha: true });
+  renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, 2));
+  var scene = new THREE.Scene();
+  scene.fog = new THREE.Fog(0x07070a, 16, 34);
+  var camera = new THREE.PerspectiveCamera(55, 1, 0.1, 100);
+  camera.position.set(0, 0, 14);
+
+  scene.add(new THREE.AmbientLight(0xffffff, 0.45));
+  var key = new THREE.DirectionalLight(0xfff0c8, 1.1); key.position.set(4, 8, 8); scene.add(key);
+  var warm = new THREE.PointLight(0xd4af37, 1.4, 40); warm.position.set(-6, -2, 6); scene.add(warm);
+  var rim = new THREE.PointLight(0xffe9a0, 1.0, 40); rim.position.set(7, 5, -2); scene.add(rim);
+
+  var goldMat = new THREE.MeshStandardMaterial({ color: 0xd4af37, metalness: 0.9, roughness: 0.28 });
+  var darkMat = new THREE.MeshStandardMaterial({ color: 0x1b1b20, metalness: 0.6, roughness: 0.32 });
+  var trimMat = new THREE.MeshStandardMaterial({ color: 0xf0cf65, metalness: 1, roughness: 0.2 });
+
+  function makeCap(gold) {
+    var g = new THREE.Group();
+    var body = gold ? goldMat : darkMat;
+    var board = new THREE.Mesh(new THREE.BoxGeometry(1.5, 0.09, 1.5), body); board.position.y = 0.2; g.add(board);
+    var base = new THREE.Mesh(new THREE.CylinderGeometry(0.46, 0.52, 0.4, 20), body); base.position.y = -0.05; g.add(base);
+    var btn = new THREE.Mesh(new THREE.SphereGeometry(0.07, 12, 12), trimMat); btn.position.y = 0.27; g.add(btn);
+    var cord = new THREE.Mesh(new THREE.CylinderGeometry(0.015, 0.015, 0.75, 6), trimMat);
+    cord.rotation.z = Math.PI / 2; cord.position.set(0.37, 0.25, 0); g.add(cord);
+    var tassel = new THREE.Mesh(new THREE.CylinderGeometry(0.05, 0.09, 0.32, 10), trimMat); tassel.position.set(0.75, 0.08, 0); g.add(tassel);
+    var s = 0.55 + Math.random() * 0.35; g.scale.set(s, s, s);
+    return g;
+  }
+
+  var caps = [];
+  function launch(c, x, y) {
+    c.mesh.position.set(x, y, (Math.random() - 0.5) * 6);
+    c.vx = (Math.random() - 0.5) * 3;
+    c.vy = 9 + Math.random() * 4.5;
+    c.rx = (Math.random() - 0.5) * 4; c.ry = (Math.random() - 0.5) * 4; c.rz = (Math.random() - 0.5) * 4;
+    c.mesh.rotation.set(Math.random() * 6, Math.random() * 6, Math.random() * 6);
+  }
+  function addCap(loop, x, y, delay) {
+    var c = { mesh: makeCap(Math.random() < 0.5), loop: loop, wait: delay || 0, vx: 0, vy: 0, rx: 0, ry: 0, rz: 0 };
+    launch(c, x, y); scene.add(c.mesh); caps.push(c);
+  }
+  for (var i = 0; i < 26; i++) addCap(true, (Math.random() - 0.5) * 18, -9, Math.random() * 4);
+
+  // gold sparks
+  function sparkTexture() {
+    var t = document.createElement("canvas"); t.width = t.height = 64;
+    var x = t.getContext("2d"), g = x.createRadialGradient(32, 32, 0, 32, 32, 32);
+    g.addColorStop(0, "rgba(255,240,170,1)"); g.addColorStop(0.35, "rgba(212,175,55,.6)"); g.addColorStop(1, "rgba(212,175,55,0)");
+    x.fillStyle = g; x.fillRect(0, 0, 64, 64); return new THREE.CanvasTexture(t);
+  }
+  var N = 260, pos = new Float32Array(N * 3), spd = new Float32Array(N);
+  for (var j = 0; j < N; j++) { pos[j*3] = (Math.random()-0.5)*30; pos[j*3+1] = (Math.random()-0.5)*20; pos[j*3+2] = (Math.random()-0.5)*14; spd[j] = 0.2 + Math.random() * 0.6; }
+  var geo = new THREE.BufferGeometry(); geo.setAttribute("position", new THREE.BufferAttribute(pos, 3));
+  var sparks = new THREE.Points(geo, new THREE.PointsMaterial({ size: 0.28, map: sparkTexture(), transparent: true, depthWrite: false, blending: THREE.AdditiveBlending }));
+  scene.add(sparks);
+
+  function resize() {
+    var w = window.innerWidth, h = window.innerHeight;
+    renderer.setSize(w, h, false); camera.aspect = w / h; camera.updateProjectionMatrix();
+  }
+  window.addEventListener("resize", resize); resize();
+
+  var ray = new THREE.Vector3();
+  function toss(ev) {
+    var nx = (ev.clientX / window.innerWidth) * 2 - 1, ny = -(ev.clientY / window.innerHeight) * 2 + 1;
+    ray.set(nx, ny, 0.5).unproject(camera).sub(camera.position).normalize();
+    var d = -camera.position.z / ray.z, p = camera.position.clone().add(ray.multiplyScalar(d));
+    for (var k = 0; k < 8; k++) addCap(false, p.x + (Math.random() - 0.5) * 1.2, p.y);
+  }
+  window.addEventListener("pointerdown", toss);
+
+  var last = performance.now(), G = 6;
+  function tick(now) {
+    var dt = Math.min((now - last) / 1000, 0.05); last = now;
+    for (var i = caps.length - 1; i >= 0; i--) {
+      var c = caps[i];
+      if (c.wait > 0) { c.wait -= dt; c.mesh.visible = false; continue; }
+      c.mesh.visible = true;
+      c.vy -= G * dt;
+      var m = c.mesh;
+      m.position.x += c.vx * dt; m.position.y += c.vy * dt;
+      m.rotation.x += c.rx * dt; m.rotation.y += c.ry * dt; m.rotation.z += c.rz * dt;
+      if (m.position.y < -10) {
+        if (c.loop) launch(c, (Math.random() - 0.5) * 18, -9);
+        else { scene.remove(m); caps.splice(i, 1); }
+      }
+    }
+    var p = geo.attributes.position.array;
+    for (var j = 0; j < N; j++) { p[j*3+1] += spd[j] * dt; if (p[j*3+1] > 10) p[j*3+1] = -10; }
+    geo.attributes.position.needsUpdate = true;
+    sparks.rotation.y += dt * 0.02;
+    renderer.render(scene, camera);
+    requestAnimationFrame(tick);
+  }
+  requestAnimationFrame(tick);
+})();
+</script>
+</body>
+</html>
