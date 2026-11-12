@@ -1,3 +1,7 @@
+<div align="center">
+<img src="logo.png" alt="FUTURA Logo" width="1000"/>
+</div>
+
 # Graduation Cap Toss 🎓
 
 A small 3D graduation gift page built with Three.js. Black and gold grad caps launch into the air, spin, and fall in a loop over a dark background with drifting gold sparks. Tap or click anywhere to toss extra caps from that spot.
